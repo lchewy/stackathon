@@ -10,6 +10,7 @@ let mainState = {
     preload: function() { 
         game.load.image('spaceship', 'assets/spaceship.png'); 
         game.load.image('space', 'assets/space.png');
+        game.load.image('laser', 'assets/laser.png');
     },
 
     create: function() { 
@@ -27,12 +28,28 @@ let mainState = {
 
         let spaceKey = game.input.keyboard.addKey(
                         Phaser.Keyboard.SPACEBAR); 
-        spaceKey.onDown.add(this.jump, this);     
+        spaceKey.onDown.add(this.jump, this);   
+
+
+        laser = game.add.group(); 
+        laser.enableBody = true; // allow us to use PHYSICS on laser
+        laser.physicsBodyType = Phaser.Physics.ARCADE;
+        laser.createMultiple(30, 'laser');
+        // laser.setAll('anchor.x', 0.5);
+        // laser.setAll('anchor.y', 1);
+        laser.setAll('outOfBoundKill', true);
+        laser.setAll('checkWorldBounds', true);  
+
+        fireButton = game.input.activePointer
     },
 
     update: function() {
         if (spaceship.y < 0 || spaceship.y > 490) this.restartGame();
-        spacefield.tilePosition.x -= 2
+        spacefield.tilePosition.x -= 2;
+
+        if(fireButton.isDown){
+            fireLaser()
+        }
         
     },
 
@@ -45,7 +62,16 @@ let mainState = {
     },
 };
 
-
+function fireLaser(){
+    if(game.time.now > laserTime){
+        lazer = laser.getFirstExists(false);
+    }
+    if(lazer){
+        lazer.reset(spaceship.x + 55, spaceship.y + 20);
+        lazer.body.velocity.x = 400; 
+        laserTime = game.time.now + 200;
+    }
+}
 
 game.state.add('main', mainState); 
 
