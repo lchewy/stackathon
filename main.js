@@ -8,13 +8,18 @@ let fireButton;
 
 let asteroid;
 let timer;
+// let boom; //
+
+let score = 0;
+let labelScore;
 
 let mainState = {
     preload: function() { 
         game.load.image('spaceship', 'assets/spaceship.png'); 
         game.load.image('space', 'assets/space.png');
         game.load.image('laser', 'assets/laser.png');
-        game.load.image('asteroid', 'assets/asteroid.png')
+        game.load.image('asteroid', 'assets/asteroid.png');
+        // game.load.spritesheet('boom', 'assets/boom.png', 128,128) //
     },
 
     create: function() { 
@@ -50,10 +55,18 @@ let mainState = {
         createAsteroid();
 
         timer = game.time.events.loop(1500, asteroidBelt, this); 
+
+        // boom = game.add.group(); //
+        // explosions.createMultiple(30, 'boom'); //
+        // boom.forEach(addBoom, this) //
+
+        labelScore = game.add.text(20,20, 0, { font: "30px Arial", fill: "#ffffff" });
+
     },
 
     update: function() {
         game.physics.arcade.overlap(laser, asteroid, collisionHandler, null, this);
+        game.physics.arcade.overlap(spaceship, asteroid, this.restartGame, null, this);
 
         if (spaceship.y < 0 || spaceship.y > 490) this.restartGame();
         spacefield.tilePosition.x -= 2;
@@ -70,6 +83,7 @@ let mainState = {
 
     restartGame: function() {
         game.state.start('main');
+        score = 0
     },
 };
 
@@ -93,19 +107,33 @@ function createAsteroid(x,y){
 
     asteroidSprite.checkWorldBounds = true;
     asteroidSprite.outOfBoundsKill = true;
+
 }
 
 function asteroidBelt(){
-    var hole = Math.floor(Math.random() * 5) + 1;
+    let hole1 = Math.floor(Math.random() * 8) + 1;
+    let hole2 = Math.floor(Math.random() * 8) + 1;
+    let hole3 = Math.floor(Math.random() * 8) + 1;
+    // let hole4 = Math.floor(Math.random() * 8) + 1;
 
-    for (var i = 0; i < 8; i++)
-        if (i != hole ) 
-            createAsteroid(600, i * 60 + 10);  
+    for (let i = 0; i < 8; i++){
+        if (i != hole1 && i !== hole2 && i !== hole3){
+            createAsteroid(600, i * 60 + 10);
+        } 
+    }
+        // if (i != hole ) 
+        //     createAsteroid(600, i * 60 + 10); 
+
+    score += 1; 
+    labelScore.text = score;
 }
 
 let collisionHandler = (l, a) =>{
     l.kill();
     a.kill();
+
+    score -=1;
+    labelScore.text = score;
 }
 
 
