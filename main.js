@@ -111,13 +111,13 @@ function createAsteroid(x,y){
 }
 
 function asteroidBelt(){
-    let hole1 = Math.floor(Math.random() * 8) + 1;
-    let hole2 = Math.floor(Math.random() * 8) + 1;
-    let hole3 = Math.floor(Math.random() * 8) + 1;
+    let hole1 = Math.floor(Math.random() * 5) + 1;
+    let hole2 = Math.floor(Math.random() * 5) + 1;
+    let hole3 = Math.floor(Math.random() * 5) + 1;
     // let hole4 = Math.floor(Math.random() * 8) + 1;
 
     for (let i = 0; i < 8; i++){
-        if (i != hole1 && i !== hole2 && i !== hole3){
+        if (i != hole1 && i !== hole1+1  && i !== hole3){
             createAsteroid(600, i * 60 + 10);
         } 
     }
