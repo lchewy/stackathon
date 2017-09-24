@@ -1,0 +1,25 @@
+{
+  "name": "asteroidgame",
+  "version": "1.0.0",
+  "description": "asteroid",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lchewy/stackathon.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lchewy/stackathon/issues"
+  },
+  "homepage": "https://github.com/lchewy/stackathon#readme",
+  "dependencies": {
+    "express": "^4.15.4",
+    "phaser": "^2.6.2",
+    "volleyball": "^1.4.1"
+  }
+}

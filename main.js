@@ -21,7 +21,7 @@ let mainState = {
         game.load.image('space', 'assets/space.png');
         game.load.image('laser', 'assets/laser.png');
         game.load.image('asteroid', 'assets/asteroid.png');
-        // game.load.spritesheet('boom', 'assets/boom.png', 128,128) //
+        game.load.spritesheet('boom', 'assets/boom.png') //
     },
 
     create: function() { 
@@ -59,7 +59,7 @@ let mainState = {
         timer = game.time.events.loop(1500, asteroidBelt, this); 
 
         // boom = game.add.group(); //
-        // explosions.createMultiple(30, 'boom'); //
+        // boom.createMultiple(30, 'boom'); //
         // boom.forEach(addBoom, this) //
 
         labelScore = game.add.text(20,20, 0, { font: "30px Arial", fill: "#ffffff" });
@@ -156,6 +156,11 @@ function asteroidBelt(){
 function collisionHandler(l,a){
     l.kill();
     a.kill();
+    // a.animations.add('boom')
+    // let explosion = boom.getFirstExists(false);
+    // explosion.reset(a.body.x, a.body.y);
+    // explosion.play('kaboom', 30, false, true);
+    // explosion.kill();
 
     score -=1;
     labelScore.text = score;
