@@ -13,6 +13,8 @@ let timer;
 let score = 0;
 let labelScore;
 
+let stateText;
+
 let mainState = {
     preload: function() { 
         game.load.image('spaceship', 'assets/spaceship.png'); 
@@ -62,13 +64,18 @@ let mainState = {
 
         labelScore = game.add.text(20,20, 0, { font: "30px Arial", fill: "#ffffff" });
 
+        stateText = game.add.text(game.world.centerX,game.world.centerY,' ', { font: '84px Arial', fill: '#fff' });
+        stateText.anchor.setTo(0.5, 0.5);
+        stateText.visible = false;
+
     },
 
     update: function() {
         game.physics.arcade.overlap(laser, asteroid, collisionHandler, null, this);
-        game.physics.arcade.overlap(spaceship, asteroid, this.restartGame, null, this);
+        game.physics.arcade.overlap(spaceship, asteroid, this.hitAsteroid, null, this);
 
-        if (spaceship.y < 0 || spaceship.y > 490) this.restartGame();
+        if (spaceship.y < 0 || spaceship.y > 490) this.hitAsteroid();
+
         spacefield.tilePosition.x -= 2;
 
         if(fireButton.isDown){
@@ -84,13 +91,31 @@ let mainState = {
     restartGame: function() {
         game.state.start('main');
         score = 0
+        stateText.visible = false;
     },
+
+    hitAsteroid: function(){
+    //     if(spaceship.alive === false) return;
+
+    //     spaceship.alive = false;
+    //     game.time.events.remove(timer);
+    // this.restartGame()
+
+
+        stateText.text=" GAME OVER \n Click to restart";
+        stateText.visible = true;
+        spaceship.kill();
+        game.time.events.remove(timer);
+        //the "click to restart" handler
+        game.input.onTap.addOnce(this.restartGame,this);
+    }
 };
 
 function fireLaser(){
-    if(game.time.now > laserTime && laser.countDead() > 0){
-        laserTime = game.time.now + 100;
-        lazer = laser.getFirstDead();
+    if(game.time.now > laserTime ){ //&& laser.countDead() > 0
+        // laserTime = game.time.now + 100;
+        // lazer = laser.getFirstDead();
+        lazer = laser.getFirstExists(false);
     }
     if(lazer){
         lazer.reset(spaceship.x + 55, spaceship.y + 20);
@@ -128,7 +153,7 @@ function asteroidBelt(){
     labelScore.text = score;
 }
 
-let collisionHandler = (l, a) =>{
+function collisionHandler(l,a){
     l.kill();
     a.kill();
 
@@ -136,6 +161,15 @@ let collisionHandler = (l, a) =>{
     labelScore.text = score;
 }
 
+// function hitAsteroid() {
+//     if(spaceship.alive === false){
+//         stateText.text=" GAME OVER \n Click to restart";
+//         stateText.visible = true;
+
+//         //the "click to restart" handler
+//         game.input.onTap.addOnce(restartGame,this);
+//     }
+// }
 
 game.state.add('main', mainState); 
 
